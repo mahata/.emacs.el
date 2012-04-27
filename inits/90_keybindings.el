@@ -15,5 +15,6 @@
 (define-key global-map (kbd "C-S-n") 'decrease-opacity)
 (define-key global-map (kbd "C-S-q") 'toggle-global-whitespace-mode)
 (define-key global-map (kbd "C-S-t") 'toggle-indent-tabs-mode)
+(define-key global-map (kbd "C-S-u") 'undo)
 
 ;; (define-key dired-mode-map "\M-s" 'other-window-or-split)
