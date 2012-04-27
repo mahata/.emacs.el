@@ -1,0 +1,4 @@
+dependency:
+
+- JavaScript Lint
+-- $ brew install jsl
