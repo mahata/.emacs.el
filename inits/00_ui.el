@@ -4,6 +4,7 @@
 ;; cursor line
 (global-hl-line-mode 1)
 ;; (set-face-background 'hl-line "bisque")
+(set-face-background 'hl-line "#220") ;; light yellow
 
 ;; frame
 (add-to-list 'default-frame-alist '(cursor-color . "red"))
