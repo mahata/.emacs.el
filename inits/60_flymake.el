@@ -36,5 +36,8 @@
 
 (add-hook 'php-mode-hook
           '(lambda() (flymake-mode t)))
+;; (add-hook 'php-mode-hook 'flymake-mode t)
 (add-hook 'javascript-mode-hook
           '(lambda() (flymake-mode t)))
+;; (add-hook 'javascript-mode-hook 'flymake-mode)
+

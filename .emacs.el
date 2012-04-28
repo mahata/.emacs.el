@@ -5,7 +5,9 @@
         (expand-file-name "~/.emacs.d/lisp/apel")
         (expand-file-name "~/.emacs.d/lisp/emu")
         (expand-file-name "~/.emacs.d/lisp/vline")
+        (expand-file-name "~/.emacs.d/lisp/anything")
         (expand-file-name "~/.emacs.d/lisp/auto-complete")
+        (expand-file-name "~/.emacs.d/lisp/auto-install")
         ) load-path))
 
 (setq exec-path
@@ -19,6 +21,7 @@
 (require 'cl)
 (require 'info)
 (require 'flymake)
+(require 'anything-startup)
 
 (require 'init-loader)
 (init-loader-load "~/.emacs.d/inits")
