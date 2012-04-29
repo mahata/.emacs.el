@@ -44,7 +44,10 @@
   (setq flymake-allowed-file-name-masks
         (append
          flymake-allowed-file-name-masks
-         '(("\\.py$" flymake-python-init)))))
+         '(("\\.py$" flymake-python-init))))
+  (setq flymake-err-line-patterns
+        (cons
+         '("\\(.*\\):\\([0-9]+\\):\\(.*\\)" 1 2 nil 3)
+         flymake-err-line-patterns)))
 
 (add-hook 'find-file-hook 'flymake-find-file-hook)
- 
