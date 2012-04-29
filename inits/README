@@ -2,6 +2,8 @@ dependency:
 
 - JavaScript Lint
 -- $ brew install jsl
+- pyflakes
+-- $ pip install pyflakes
 - Exuberant ctags
 -- $ brew install ctags
 -- $ ctags -V -e **/*

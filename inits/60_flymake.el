@@ -22,8 +22,7 @@
            (local-file (file-relative-name
                         temp-file
                         (file-name-directory buffer-file-name))))
-      (list "jsl" (list "-process" local-file))
-      ))
+      (list "jsl" (list "-process" local-file))))
   (setq flymake-allowed-file-name-masks
         (append
          flymake-allowed-file-name-masks
@@ -34,10 +33,18 @@
          '("\\(.+\\)(\\([0-9]+\\)): \\(?:lint \\)?\\(\\(?:warning\\|SyntaxError\\):.+\\)" 1 2 nil 3)
          flymake-err-line-patterns)))
 
-(add-hook 'php-mode-hook
-          '(lambda() (flymake-mode t)))
-;; (add-hook 'php-mode-hook 'flymake-mode t)
-(add-hook 'javascript-mode-hook
-          '(lambda() (flymake-mode t)))
-;; (add-hook 'javascript-mode-hook 'flymake-mode)
+(when (not (fboundp 'flymake-python-init))
+  (defun flymake-python-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list "pyflakes" (list local-file))))
+  (setq flymake-allowed-file-name-masks
+        (append
+         flymake-allowed-file-name-masks
+         '(("\\.py$" flymake-python-init)))))
 
+(add-hook 'find-file-hook 'flymake-find-file-hook)
+ 
