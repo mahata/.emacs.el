@@ -2,3 +2,6 @@ dependency:
 
 - JavaScript Lint
 -- $ brew install jsl
+- Exuberant ctags
+-- $ brew install ctags
+-- $ ctags -V -e **/*
