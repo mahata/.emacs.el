@@ -20,6 +20,7 @@
 
 (require 'cl)
 (require 'info)
+(require 'popup)
 (require 'flymake)
 (require 'anything-startup)
 
