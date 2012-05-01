@@ -1,5 +1,7 @@
 dependency:
 
+- ispell
+-- $ brew install ispell
 - JavaScript Lint
 -- $ brew install jsl
 - pyflakes
