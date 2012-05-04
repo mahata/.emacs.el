@@ -67,7 +67,6 @@
          '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3) 
          flymake-err-line-patterns)))
 
-
 (defun my-popup-flymake-display-error ()
   (interactive)
   (let* ((line-no            (flymake-current-line-no))
