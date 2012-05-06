@@ -1,3 +1,6 @@
+(delete '("\\.html?\\'" flymake-xml-init) flymake-allowed-file-name-masks)
+(delete '("\\.java\\'" flymake-simple-make-java-init flymake-simple-java-cleanup) flymake-allowed-file-name-masks)
+
 (when (not (fboundp 'flymake-php-init))
   (defun flymake-php-init ()
     (let* ((temp-file  (flymake-init-create-temp-buffer-copy
@@ -62,6 +65,23 @@
         (append
          flymake-allowed-file-name-masks
          '(("\\.rb$" flymake-ruby-init))))
+  (setq flymake-err-line-patterns
+        (cons
+         '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3) 
+         flymake-err-line-patterns)))
+
+(when (not (fboundp 'flymake-java-init))
+  (defun flymake-java-init ()
+  (let* ((temp-file   (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+         (local-file  (file-relative-name
+                       temp-file
+                       (file-name-directory buffer-file-name))))
+    (list "javac" (list "-Xlint" local-file))))
+  (setq flymake-allowed-file-name-masks
+        (append
+         flymake-allowed-file-name-masks
+         '(("\\.java$" flymake-java-init))))
   (setq flymake-err-line-patterns
         (cons
          '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3) 
