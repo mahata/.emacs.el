@@ -1,7 +1,7 @@
 dependency:
 
-- ispell
--- $ brew install ispell
+- aspell
+-- $ brew install aspell --lang=en (https://gist.github.com/2624337)
 - JavaScript Lint
 -- $ brew install jsl
 - pyflakes
