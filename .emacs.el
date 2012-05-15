@@ -5,6 +5,7 @@
         (expand-file-name "~/.emacs.d/lisp/apel")
         (expand-file-name "~/.emacs.d/lisp/emu")
         (expand-file-name "~/.emacs.d/lisp/vline")
+        (expand-file-name "~/.emacs.d/lisp/haskell-mode")
         (expand-file-name "~/.emacs.d/lisp/anything")
         (expand-file-name "~/.emacs.d/lisp/auto-complete")
         (expand-file-name "~/.emacs.d/lisp/auto-install")
