@@ -9,7 +9,7 @@
 ;;          2001-2002 Reuben Thomas (>=v1.4)
 ;;          2003      Dave Love <fx@gnu.org>
 ;; Keywords: faces files Haskell
-;; Version: v2.8.0
+;; Version: $Name:  $
 ;; URL: http://www.haskell.org/haskell-mode/
 
 ;; This file is not part of GNU Emacs.
@@ -158,18 +158,11 @@
 ;;; Code:
 
 (eval-when-compile (require 'cl))
-(eval-when-compile
-  ;; Emacs 21 defines `values' as a (run-time) alias for list.
-  ;; Don't maerge this with the pervious clause.
-  (if (string-match "values"
-		    (pp (byte-compile (lambda () (values t)))))
-      (defsubst values (&rest values)
-	values)))
 
 ;; All functions/variables start with `(literate-)haskell-'.
 
 ;; Version of mode.
-(defconst haskell-version "v2.8.0"
+(defconst haskell-version "$Name:  $"
   "`haskell-mode' version number.")
 (defun haskell-version ()
   "Echo the current version of `haskell-mode' in the minibuffer."
@@ -184,7 +177,7 @@
 ;; Set load-path
 ;;;###autoload
 (add-to-list 'load-path
-   (or (file-name-directory load-file-name) (car load-path)))
+             (or (file-name-directory load-file-name) (car load-path)))
 
 ;; Set up autoloads for the modules we supply
 (autoload 'turn-on-haskell-decl-scan "haskell-decl-scan"
@@ -252,10 +245,14 @@ be set to the preferred literate style."
     (define-key map (kbd "C-c C-i") 'inferior-haskell-info)
     (define-key map (kbd "C-c M-.") 'inferior-haskell-find-definition)
     (define-key map (kbd "C-c C-d") 'inferior-haskell-find-haddock)
+    
+    (define-key map (kbd "C-c C-.") 'haskell-mode-format-imports)
+    (define-key map (kbd "C-c i") 'haskell-navigate-imports)
 
     (define-key map [?\C-c ?\C-v] 'haskell-check)
 
     (define-key map [remap delete-indentation] 'haskell-delete-indentation)
+    (define-key map [backtab] 'unindent-for-tab-command)
     map)
   "Keymap used in Haskell mode.")
 
@@ -356,9 +353,9 @@ May return a qualified name."
     (let ((case-fold-search nil))
       (multiple-value-bind (start end)
           (if (looking-at "\\s_")
-              (values (progn (skip-syntax-backward "_") (point))
-                      (progn (skip-syntax-forward "_") (point)))
-            (values
+              (list (progn (skip-syntax-backward "_") (point))
+                    (progn (skip-syntax-forward "_") (point)))
+            (list
              (progn (skip-syntax-backward "w'")
                     (skip-syntax-forward "'") (point))
              (progn (skip-syntax-forward "w'") (point))))
@@ -394,19 +391,61 @@ May return a qualified name."
 ;; Various mode variables.
 
 (defcustom haskell-mode-hook nil
-  "Hook run after entering Haskell mode.
-Do not select more than one of the three indentation modes."
+  "
+Hook run after entering Haskell mode.
+
+--------------------------------------------------------------------------------
+
+CONFIGURING INDENTATION
+
+  Using this you can configure the Haskell indentation mode. There
+  are three major Haskell indentation modes:
+
+  `haskell-indentation', Kristof Bastiaensen
+    Intelligent semi-automatic indentation, mark two. How to enable:
+    (custom-set-variables
+     '(haskell-mode-hook '(turn-on-haskell-indentation)))
+
+  `haskell-indent', Guy Lapalme
+    Intelligent semi-automatic indentation. How to enable:
+    (custom-set-variables
+     '(haskell-mode-hook '(turn-on-haskell-indentation)))
+
+  `haskell-simple-indent', Graeme E Moss and Heribert Schuetz
+    Simple indentation. How to enable:
+    (custom-set-variables
+     '(haskell-mode-hook '(turn-on-haskell-simple-indent)))
+
+  You can either:
+
+   1) Use the code above if you're more Elisp savvy, and put it
+      in your .emacs or similar file (type C-M-x to run each
+      one), or
+
+   2) customize the variable by ``M-x customize-group'' (see the
+      link below), or
+
+   3) some people prefer to add custom hooks like the below:
+ 
+      (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+
+  In order to test each one after enabling you can re-run M-x
+  haskell-mode in the same buffer.
+
+  Do not select more than one of the three indentation modes.
+
+--------------------------------------------------------------------------------"
   :type 'hook
   :group 'haskell
   :options `(turn-on-haskell-indent turn-on-haskell-indentation
-	     turn-on-font-lock
-	     ,(if (boundp 'eldoc-documentation-function)
-		  'turn-on-eldoc-mode
-		'turn-on-haskell-doc-mode) ; Emacs 21
-	     ,@(if (fboundp 'capitalized-words-mode)
-		   '(capitalized-words-mode))
-	     turn-on-simple-indent turn-on-haskell-doc-mode
-	     turn-on-haskell-decl-scan imenu-add-menubar-index))
+                                    turn-on-font-lock
+                                    ,(if (boundp 'eldoc-documentation-function)
+                                         'turn-on-eldoc-mode
+                                       'turn-on-haskell-doc-mode) ; Emacs 21
+                                    ,@(if (fboundp 'capitalized-words-mode)
+                                          '(capitalized-words-mode))
+                                    turn-on-simple-indent turn-on-haskell-doc-mode
+                                    turn-on-haskell-decl-scan imenu-add-menubar-index))
 
 (defvar eldoc-print-current-symbol-info-function)
 
@@ -458,6 +497,7 @@ Invokes `haskell-mode-hook'."
   (set (make-local-variable 'comment-end) "")
   (set (make-local-variable 'comment-end-skip) "[ \t]*\\(-}\\|\\s>\\)")
   (set (make-local-variable 'parse-sexp-ignore-comments) nil)
+  (set (make-local-variable 'indent-line-function) 'haskell-mode-suggest-indent-choice)
   ;; Set things up for eldoc-mode.
   (set (make-local-variable 'eldoc-documentation-function)
        'haskell-doc-current-info)
@@ -548,13 +588,15 @@ If nil, use the Hoogle web-site."
                         nil nil def))))
   (if (null haskell-hoogle-command)
       (browse-url (format "http://haskell.org/hoogle/?q=%s" query))
-    (if (fboundp 'help-setup-xref)
-        (help-setup-xref (list 'haskell-hoogle query) (interactive-p)))
-    (with-output-to-temp-buffer
-        (if (fboundp 'help-buffer) (help-buffer) "*Help*")
-      (with-current-buffer standard-output
-        (start-process "hoogle" (current-buffer) haskell-hoogle-command
-                       query)))))
+    (lexical-let ((temp-buffer (if (fboundp 'help-buffer) (help-buffer) "*Help*")))
+      (with-output-to-temp-buffer temp-buffer
+	(with-current-buffer standard-output
+	  (let ((hoogle-process
+		 (start-process "hoogle" (current-buffer) haskell-hoogle-command query))
+		(scroll-to-top
+		 (lambda (process event)
+		   (set-window-start (get-buffer-window temp-buffer t) 1))))
+	    (set-process-sentinel hoogle-process scroll-to-top)))))))
 
 ;;;###autoload
 (defalias 'hoogle 'haskell-hoogle)
@@ -608,11 +650,36 @@ See `haskell-check-command' for the default."
 (defun haskell-flymake-init ()
   "Flymake init function for Haskell.
 To be added to `flymake-init-create-temp-buffer-copy'."
-  (let ((checker-elts (split-string haskell-saved-check-command)))
+  (let ((checker-elts (and haskell-saved-check-command
+			   (split-string haskell-saved-check-command))))
     (list (car checker-elts)
 	  (append (cdr checker-elts)
 		  (list (flymake-init-create-temp-buffer-copy
 			 'flymake-create-temp-inplace))))))
+
+(defun haskell-mode-suggest-indent-choice ()
+  "Ran when the user tries to indent in the buffer but no indentation mode has been selected.
+Brings up the documentation for haskell-mode-hook."
+  (describe-variable 'haskell-mode-hook))
+
+(defvar unindent-line-function nil
+  "Function to unindent the current line.
+This function will be called with no arguments.")
+
+(defun unindent-for-tab-command ()
+  "Un-indent the current line according to the mode's unindenting function (if any)."
+  (interactive)
+  (when unindent-line-function
+    (funcall unindent-line-function)))
+
+(defun haskell-mode-format-imports ()
+  "Format the imports by aligning and sorting them."
+  (interactive)
+  (let ((col (current-column)))
+    (hs-sort-imports)
+    (hs-align-imports)
+    (goto-char (+ (line-beginning-position)
+                  col))))
 
 (eval-after-load "flymake"
   '(add-to-list 'flymake-allowed-file-name-masks
