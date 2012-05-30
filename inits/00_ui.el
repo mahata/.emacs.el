@@ -23,6 +23,7 @@
 (set-face-foreground 'mode-line-inactive "white") ;; set inactive modeline
 (set-face-background 'mode-line-inactive "blue")  ;; set inactive modeline
 (line-number-mode 1) ;; show line number
+(column-number-mode t) ;; show column number
 
 ;; opacity
 (add-to-list 'default-frame-alist '(alpha . 85))
