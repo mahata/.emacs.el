@@ -4,3 +4,5 @@
 (setq anything-candidate-number-limit 30)
 (setq anything-input-idle-delay 0.05)
 (setq anything-idle-delay 0.001)
+
+(setq anything-c-filelist-file-name "/tmp/mnt/all.filelist")
