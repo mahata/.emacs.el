@@ -226,10 +226,12 @@ be set to the preferred literate style."
 ;; Mode maps.
 (defvar haskell-mode-map
   (let ((map (make-sparse-keymap)))
-    ;; Bindings for the inferior haskell process:
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; For inferior haskell mode, use the below bindings
     ;; (define-key map [?\M-C-x]     'inferior-haskell-send-defun)
     ;; (define-key map [?\C-x ?\C-e] 'inferior-haskell-send-last-sexp)
     ;; (define-key map [?\C-c ?\C-r] 'inferior-haskell-send-region)
+    (define-key map [?\C-x ?\C-d] 'inferior-haskell-send-decl)
     (define-key map [?\C-c ?\C-z] 'switch-to-haskell)
     (define-key map [?\C-c ?\C-l] 'inferior-haskell-load-file)
     ;; I think it makes sense to bind inferior-haskell-load-and-run to C-c
@@ -240,19 +242,18 @@ be set to the preferred literate style."
     ;; (define-key map [?\C-c ?\C-s] 'inferior-haskell-start-process)
     ;; That's what M-; is for.
     ;; (define-key map "\C-c\C-c" 'comment-region)
-
     (define-key map (kbd "C-c C-t") 'inferior-haskell-type)
     (define-key map (kbd "C-c C-i") 'inferior-haskell-info)
     (define-key map (kbd "C-c M-.") 'inferior-haskell-find-definition)
     (define-key map (kbd "C-c C-d") 'inferior-haskell-find-haddock)
-    
-    (define-key map (kbd "C-c C-.") 'haskell-mode-format-imports)
-    (define-key map (kbd "C-c i") 'haskell-navigate-imports)
-
     (define-key map [?\C-c ?\C-v] 'haskell-check)
 
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Editing-specific commands
+    (define-key map (kbd "C-c C-.") 'haskell-mode-format-imports)
     (define-key map [remap delete-indentation] 'haskell-delete-indentation)
     (define-key map [backtab] 'unindent-for-tab-command)
+
     map)
   "Keymap used in Haskell mode.")
 
@@ -519,16 +520,46 @@ Invokes `haskell-mode-hook'."
   ;; TABs stops are 8 chars apart, as mandated by the Haskell Report.  --Stef
   (set (make-local-variable 'indent-tabs-mode) nil)
   (set (make-local-variable 'tab-width) 8)
+  ;; dynamic abbrev support: recognize Haskell identifiers
+  ;; Haskell is case-sensitive language
+  (set (make-local-variable 'dabbrev-case-fold-search) nil)
+  (set (make-local-variable 'dabbrev-case-distinction) nil)
+  (set (make-local-variable 'dabbrev-case-replace) nil)
+  (set (make-local-variable 'dabbrev-abbrev-char-regexp) "\\sw\\|[.]")
   (setq haskell-literate nil))
-
-(defun in-comment () (nth 4 (syntax-ppss)))
 
 (defun haskell-fill-paragraph (justify)
   (save-excursion
-    ;; We don't want to reflow code.
-    (unless (in-comment)
-      (end-of-line)) ; Try to get inside a comment
-    (if (in-comment) nil t)))
+    ;; Fill paragraph should only work in comments.
+    ;; The -- comments are handled properly by default
+    ;; The {- -} comments need some extra love.
+    (let* ((syntax-values (syntax-ppss))
+           (comment-num (nth 4 syntax-values)))
+      (cond
+       ((eq t comment-num)
+        ;; standard fill works wonders inside a non-nested comment
+        (fill-comment-paragraph justify))
+
+       ((integerp comment-num)
+        ;; we are in a nested comment. lets narrow to comment content
+        ;; and use plain paragraph fill for that
+        (let* ((comment-start-point (nth 8 syntax-values))
+               (comment-end-point
+                (save-excursion
+                  (re-search-forward "-}" (point-max) t comment-num)
+                  (point)))
+               (fill-paragraph-handle-comment nil))
+          (save-restriction
+            (narrow-to-region (+ 2 comment-start-point) (- comment-end-point 2))
+            (fill-paragraph justify))))
+       ((eolp)
+        ;; do nothing outside of a comment
+        t)
+       (t
+        ;; go to end of line and try again
+        (end-of-line)
+        (haskell-fill-paragraph justify))))))
+
 
 ;; (defun haskell-adaptive-fill ()
 ;;   ;; We want to use "--  " as the prefix of "-- |", etc.
@@ -542,7 +573,7 @@ Invokes `haskell-mode-hook'."
 ;;         (let ();(prefix-start (point)))
 ;;           (skip-syntax-forward "^w")
 ;;           (make-string (- (point) line-start) ?\s))))))
-          
+
 
 
 ;;;###autoload
@@ -623,6 +654,18 @@ If nil, use the Hoogle web-site."
 		 (const "ghc -fno-code")
 		 (string :tag "Other command")))
 
+(defcustom haskell-stylish-on-save nil
+  "Whether to run stylish-haskell on the buffer before
+saving. Needs 'haskell-mode-save-buffer to be bound for C-x C-s."
+  :group 'haskell
+  :type 'boolean)
+
+(defcustom haskell-tags-on-save nil
+  "Generate tags via hasktags on save. Needs
+'haskell-mode-save-buffer to be bound for C-x C-s."
+  :group 'haskell
+  :type 'boolean)
+
 (defvar haskell-saved-check-command nil
   "Internal use.")
 
@@ -676,10 +719,120 @@ This function will be called with no arguments.")
   "Format the imports by aligning and sorting them."
   (interactive)
   (let ((col (current-column)))
-    (hs-sort-imports)
-    (hs-align-imports)
+    (haskell-sort-imports)
+    (haskell-align-imports)
     (goto-char (+ (line-beginning-position)
                   col))))
+
+(defun haskell-mode-message-line (str)
+  "Message only one line, multiple lines just disturbs the programmer."
+  (let ((lines (split-string str "\n" t)))
+    (when (and (car lines) (stringp (car lines)))
+      (message "%s"
+               (concat (car lines)
+                       (if (and (cdr lines) (stringp (cadr lines)))
+                           (format " [ %s .. ]" (haskell-string-take (haskell-trim (cadr lines)) 10))
+                         ""))))))
+
+(defun haskell-mode-contextual-space ()
+  "Contextually do clever stuff when hitting space."
+  (interactive)
+  (cond ((save-excursion (forward-word -1)
+                         (looking-at "^import$"))
+         (insert " ")
+         (let ((module (ido-completing-read "Module: " (haskell-session-all-modules))))
+           (insert module)
+           (haskell-mode-format-imports)))
+        ((not (string= "" (save-excursion (forward-char -1) (haskell-ident-at-point))))
+         (let ((ident (save-excursion (forward-char -1) (haskell-ident-at-point))))
+           (insert " ")
+           (haskell-process-do-try-info ident)))
+        (t (insert " "))))
+
+(defun haskell-mode-save-buffer ()
+  "Save the current buffer."
+  (interactive)
+  (let ((modified (buffer-modified-p)))
+    (save-buffer)
+    (when haskell-stylish-on-save
+      (haskell-mode-stylish-buffer))
+    (save-buffer)
+    (when modified
+      (when haskell-tags-on-save
+        (haskell-process-generate-tags)))))
+
+(defun haskell-mode-buffer-apply-command (cmd)
+  "Execute shell command CMD with current buffer as input and
+  replace the whole buffer with the output. If CMD fails the
+  buffer remains unchanged."
+  (let* ((file (buffer-file-name (current-buffer)))
+         (output (with-temp-buffer
+                   (let ((default-directory (if haskell-session
+                                                (haskell-session-cabal-dir haskell-session)
+                                              default-directory)))
+                     (call-process cmd
+                                   file
+                                   (list t nil)
+                                   nil))
+                   (buffer-substring-no-properties (point-min) (point-max)))))
+    (unless (string= "" output)
+      (erase-buffer)
+      (insert output))))
+
+(defun haskell-mode-stylish-buffer ()
+  "Apply stylish-haskell to the current buffer."
+  (interactive)
+  (let ((column (current-column)) 
+        (line (line-number-at-pos)))
+    (haskell-mode-buffer-apply-command "stylish-haskell")
+    (goto-line line)
+    (goto-char (+ column (point)))))
+
+(defun haskell-mode-tag-find (&optional next-p)
+  "The tag find function, specific for the particular session."
+  (interactive "P")
+  (let ((tags-file-name (haskell-session-tags-filename (haskell-session)))
+        (tags-revert-without-query t)
+        (ident (haskell-ident-at-point)))
+    (when (not (string= "" (haskell-trim ident)))
+      (cond ((file-exists-p tags-file-name)
+             (find-tag ident next-p))
+            (t (haskell-process-generate-tags ident))))))
+
+;; From Bryan O'Sullivan's blog:
+;; http://www.serpentine.com/blog/2007/10/09/using-emacs-to-insert-scc-annotations-in-haskell-code/
+(defun haskell-mode-insert-scc-at-point ()
+  "Insert an SCC annotation at point."
+  (interactive)
+  (if (or (looking-at "\\b\\|[ \t]\\|$") (and (not (bolp))
+					  (save-excursion
+					    (forward-char -1)
+					    (looking-at "\\b\\|[ \t]"))))
+      (let ((space-at-point (looking-at "[ \t]")))
+	(unless (and (not (bolp)) (save-excursion
+				    (forward-char -1)
+				    (looking-at "[ \t]")))
+	  (insert " "))
+	(insert "{-# SCC \"\" #-}")
+	(unless space-at-point
+	  (insert " "))
+	(forward-char (if space-at-point -5 -6)))
+    (error "Not over an area of whitespace")))
+
+;; Also Bryan O'Sullivan's.
+(defun haskell-mode-kill-scc-at-point ()
+  "Kill the SCC annotation at point."
+  (interactive)
+  (save-excursion
+    (let ((old-point (point))
+	  (scc "\\({-#[ \t]*SCC \"[^\"]*\"[ \t]*#-}\\)[ \t]*"))
+      (while (not (or (looking-at scc) (bolp)))
+	(forward-char -1))
+      (if (and (looking-at scc)
+	       (<= (match-beginning 1) old-point)
+	       (> (match-end 1) old-point))
+	  (kill-region (match-beginning 0) (match-end 0))
+	(error "No SCC at point")))))
 
 (eval-after-load "flymake"
   '(add-to-list 'flymake-allowed-file-name-masks

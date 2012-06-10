@@ -82,6 +82,29 @@ you can test the value of `system-type`:
 Note that Cygwin binaries tend to interact poorly with NTEmacs, especially
 w.r.t signal-handling.
 
+Setup for new interactive mode
+------------------------------
+
+A new mode for the REPL and GHCi sessions is called
+haskell-interactive-mode, it intends to replace inferior-haskell-mode,
+but comes with different features.
+
+There are new modules for handling the following things:
+
+* Separate sessions per Cabal project (haskell-session.el).
+* A new inferior Haskell process handling code (haskell-process.el).
+* New REPL (haskell-interactive-mode.el).
+* Bunch of new features based upon the above three things.
+
+To make use of them, try out the instructions in
+`examples/init.el`. WARNING: The features expressed in here are new
+and many are Linux-specific.
+
+Note: These features are entirely orthogonal to the older
+inferior-haskell-mode, and therefore keybindings which work for
+inferior-haskell-mode will not magically work for the above new
+modules.
+
 
 Customization
 -------------
@@ -116,3 +139,11 @@ Support
 
 - [Github homepage](https://github.com/haskell/haskell-mode)
 - [Mailing list](http://projects.haskell.org/cgi-bin/mailman/listinfo/haskellmode-emacs)
+
+Contributing
+------------
+
+For submitting pull requests, please see the wiki
+[page on contributing](https://github.com/haskell/haskell-mode/wiki/Contributing). You
+don't have to follow this guide, but please make sure your pull
+requests are at least properly rebased and up to date.

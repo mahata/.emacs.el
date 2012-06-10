@@ -132,11 +132,34 @@ column, `tab-to-tab-stop' is done instead."
     (goto-char (line-beginning-position))
     (save-excursion
       (while (< (point) current-point)
-        (hs-indent-hsgm)
+        (haskell-simple-indent)
         (setq i (+ i 1))))
     (while (< x (- i 1))
-      (hs-indent-hsgm)
+      (haskell-simple-indent)
       (setq x (+ x 1)))))
+
+(defun haskell-simple-indent-newline-same-col ()
+  "Make a newline and go to the same column as the current line."
+  (interactive)
+  (let ((point (point)))
+    (let ((start-end
+	   (save-excursion
+	     (let* ((start (line-beginning-position))
+		    (end (progn (goto-char start)
+				(search-forward-regexp
+				 "[^ ]" (line-end-position) t 1))))
+	       (when end (cons start (1- end)))))))
+      (if start-end
+	  (progn (newline)
+		 (insert (buffer-substring-no-properties
+			  (car start-end) (cdr start-end))))
+	(newline)))))
+
+(defun haskell-simple-indent-newline-indent ()
+  "Make a newline on the current column and indent on step."
+  (interactive)
+  (haskell-simple-indent-newline-same-col)
+  (insert "  "))
 
 (defvar haskell-simple-indent-old)
 (defvar haskell-simple-unindent-old)
@@ -151,6 +174,7 @@ whitespace.
 Runs `haskell-simple-indent-hook'.
 
 Use `haskell-simple-indent-version' to find out what version this is."
+  (interactive)
   (set (make-local-variable 'haskell-simple-indent-old) indent-line-function)
   (set (make-local-variable 'indent-line-function) 'haskell-simple-indent)
   (set (make-local-variable 'haskell-simple-unindent-old) unindent-line-function)
@@ -160,6 +184,7 @@ Use `haskell-simple-indent-version' to find out what version this is."
 (defun turn-off-haskell-simple-indent ()
   "Return `indent-line-function' to original value.
 I.e. the value before `turn-on-haskell-simple-indent' was called."
+  (interactive)
   (when (local-variable-p 'haskell-simple-indent-old)
     (setq indent-line-function haskell-simple-indent-old)
     (setq unindent-line-function haskell-simple-unindent-old)

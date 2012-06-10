@@ -6,6 +6,8 @@
             (setq-default indent-tabs-mode nil)
             (setq-default indent-level 4)
             (setq-default tab-width 4)
+            (turn-on-haskell-doc-mode)
+            (turn-on-haskell-indent)
             ))
 
 (add-to-list 'auto-mode-alist '("\\.hs$" . haskell-mode))
