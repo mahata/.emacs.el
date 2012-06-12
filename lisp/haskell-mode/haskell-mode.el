@@ -834,10 +834,10 @@ This function will be called with no arguments.")
 	  (kill-region (match-beginning 0) (match-end 0))
 	(error "No SCC at point")))))
 
-(eval-after-load "flymake"
-  '(add-to-list 'flymake-allowed-file-name-masks
-		'("\\.l?hs\\'" haskell-flymake-init)))
-
+;; (eval-after-load "flymake"
+;;   '(add-to-list 'flymake-allowed-file-name-masks
+;; 		'("\\.l?hs\\'" haskell-flymake-init)))
+
 ;; Provide ourselves:
 
 (provide 'haskell-mode)

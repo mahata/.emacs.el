@@ -1,6 +1,7 @@
 (delete '("\\.xml\\'" flymake-xml-init) flymake-allowed-file-name-masks)
 (delete '("\\.html?\\'" flymake-xml-init) flymake-allowed-file-name-masks)
 (delete '("\\.java\\'" flymake-simple-make-java-init flymake-simple-java-cleanup) flymake-allowed-file-name-masks)
+(delete '("\\.l?hs\\'" haskell-flymake-init) flymake-allowed-file-name-masks)
 ;; (delete '("\\.l?hs$" ghc-flymake-init flymake-simple-cleanup ghc-flymake-get-real-file-name) flymake-allowed-file-name-masks)
 
 (when (not (fboundp 'flymake-php-init))
@@ -71,6 +72,7 @@
         (cons
          '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3) 
          flymake-err-line-patterns)))
+
 
 ;; (when (not (fboundp 'flymake-java-init))
 ;;   (defun flymake-java-init ()
