@@ -8,6 +8,7 @@
 (define-key global-map "\M-s" 'other-window-or-split)
 (define-key global-map "\M-c" 'anything-filelist)
 (define-key global-map "\M-q" 'anything-grep)
+(define-key global-map "\M-g" 'quickrun)
 (define-key global-map "\C-c\C-i" 'dabbrev-expand)
 (define-key global-map "\C-x\C-p" 'my-popup-flymake-display-error)
 (define-key global-map "\C-x\C-i" 'indent-region)
