@@ -2,6 +2,8 @@ dependency:
 
 - aspell
 -- $ brew install aspell --lang=en (https://gist.github.com/2624337)
+- rhino
+-- $ brew install rhino
 - JavaScript Lint
 -- $ brew install jsl
 - pyflakes
