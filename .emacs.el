@@ -4,6 +4,7 @@
         (expand-file-name "~/.emacs.d/init-loader")
         (expand-file-name "~/.emacs.d/lisp/apel")
         (expand-file-name "~/.emacs.d/lisp/emu")
+        (expand-file-name "~/.emacs.d/lisp/erlang-mode")
         (expand-file-name "~/.emacs.d/lisp/vline")
         (expand-file-name "~/.emacs.d/lisp/popwin")
         (expand-file-name "~/.emacs.d/lisp/haskell-mode")
