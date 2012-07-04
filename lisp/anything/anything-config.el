@@ -7001,7 +7001,7 @@ If not found in CURRENT-DIR search in upper directory."
                        (anything-aif (string-match "\177" i)
                            (substring i 0 it)
                          i))
-           do (cond ((and elm (< (length elm) 2000) (string-match "^\\(.+\\),[0-9]+" elm))
+           do (cond ((and elm (string-match "^\\([^,]+\\),[0-9]+$" elm))
                      (setq fname (match-string 1 elm)))
                     (elm (setq cand (concat fname ": " elm)))
                     (t (setq cand nil)))
