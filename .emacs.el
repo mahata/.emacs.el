@@ -12,6 +12,7 @@
         (expand-file-name "~/.emacs.d/lisp/anything")
         (expand-file-name "~/.emacs.d/lisp/auto-complete")
         (expand-file-name "~/.emacs.d/lisp/auto-install")
+        (expand-file-name "~/.emacs.d/lisp/ensime/elisp")
         ) load-path))
 
 (setq exec-path
@@ -27,6 +28,7 @@
 (require 'popwin)
 (require 'popup)
 (require 'flymake)
+(require 'ensime)
 (require 'anything-startup)
 
 (require 'init-loader)
