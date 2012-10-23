@@ -26,12 +26,15 @@ endwhile
 eval
 exit
 extends
+file_get_contents
+file_put_contents
 final
 for
 foreach
 function
 global
 goto
+htmlspecialchars
 if
 implements
 include
@@ -58,5 +61,6 @@ try
 unset
 use
 var
+var_dump
 while
 xor

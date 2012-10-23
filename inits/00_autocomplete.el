@@ -1,2 +1,4 @@
 (require 'auto-complete-config)
-(global-auto-complete-mode 1)
+(add-to-list 'ac-dictionary-directories "~/emacs-conf/lisp/auto-complete/dict")
+(add-to-list 'ac-user-dictionary-files "~/emacs-conf/lisp/auto-complete/dict/my-dictionary")
+(ac-config-default)
