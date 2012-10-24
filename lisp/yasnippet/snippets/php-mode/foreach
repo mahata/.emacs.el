@@ -1,0 +1,6 @@
+# name: foreach (array_expression as $value)
+# key: foreach
+# --
+foreach (\$${1:var} as \$${2:vars}) {
+    ${3:// body}
+}
