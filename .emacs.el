@@ -9,7 +9,7 @@
         (expand-file-name "~/.emacs.d/lisp/popwin")
         (expand-file-name "~/.emacs.d/lisp/haskell-mode")
         (expand-file-name "~/.emacs.d/lisp/scala-mode")
-        (expand-file-name "~/.emacs.d/lisp/yasnippet")
+        ;; (expand-file-name "~/.emacs.d/lisp/yasnippet")
         (expand-file-name "~/.emacs.d/lisp/anything")
         (expand-file-name "~/.emacs.d/lisp/auto-complete")
         (expand-file-name "~/.emacs.d/lisp/auto-install")

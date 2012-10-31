@@ -27,3 +27,5 @@
 
 ;; opacity
 (add-to-list 'default-frame-alist '(alpha . 85))
+
+
