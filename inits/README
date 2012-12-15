@@ -6,6 +6,8 @@ dependency:
 -- $ brew install rhino
 - JavaScript Lint
 -- $ brew install jsl
+- ChkTex
+-- $ brew install chktex
 - pyflakes
 -- $ pip install pyflakes
 - Exuberant ctags
