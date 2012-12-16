@@ -1,5 +1,6 @@
 (delete '("\\.xml\\'" flymake-xml-init) flymake-allowed-file-name-masks)
 (delete '("\\.html?\\'" flymake-xml-init) flymake-allowed-file-name-masks)
+(delete '("\\.tex\\'" flymake-simple-tex-init) flymake-allowed-file-name-masks)
 (delete '("\\.java\\'" flymake-simple-make-java-init flymake-simple-java-cleanup) flymake-allowed-file-name-masks)
 (delete '("\\.l?hs\\'" haskell-flymake-init) flymake-allowed-file-name-masks)
 ;; (delete '("\\.l?hs$" ghc-flymake-init flymake-simple-cleanup ghc-flymake-get-real-file-name) flymake-allowed-file-name-masks)
@@ -99,7 +100,8 @@
            (local-file  (file-relative-name
                          temp-file
                          (file-name-directory buffer-file-name))))
-      (list "chktex" (list "-g0" "-r" "-l" (expand-file-name "~/.chktexrc") "-I" "-q" "-v0" file-name))))
+      (list "chktex" (list "-g0" "-r" "-l" (expand-file-name "~/.chktexrc") "-I" "-q" "-v0" local-file))))
+      ;; (list "chktex" (list local-file))))
   (setq flymake-allowed-file-name-masks
         (append
          flymake-allowed-file-name-masks

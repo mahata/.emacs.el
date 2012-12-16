@@ -8,6 +8,14 @@ dependency:
 -- $ brew install jsl
 - ChkTex
 -- $ brew install chktex
+
+and ~/.chktexrc would be:
+
+    OutFormat
+    {
+    "%f%b%l%b%c%b%k: %m!n"
+    }
+
 - pyflakes
 -- $ pip install pyflakes
 - Exuberant ctags
