@@ -11,3 +11,5 @@ dependency:
 - Exuberant ctags
 -- $ brew install ctags
 -- $ ctags -V -e **/*
+- w3m
+-- $ brew install w3m
