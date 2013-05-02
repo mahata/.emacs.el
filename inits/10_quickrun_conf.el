@@ -2,10 +2,17 @@
 (push '("*quickrun*") popwin:special-display-config)
 
 ;; javascript
-(quickrun-add-command "rhino"
-                      '((:command . "rhino")))
+
+;; (quickrun-add-command "rhino"
+;;                       '((:command . "rhino")))
+;; (add-to-list 'quickrun-file-alist
+;;              '("\\.js$" . "rhino"))
+
+(quickrun-add-command "node"
+                      '((:command . "~/.nodebrew/current/bin/node")
+                        (:exec . "%c %s")))
 (add-to-list 'quickrun-file-alist
-             '("\\.js$" . "rhino"))
+             '("\\.js$" . "node"))
 
 ;; clojure
 (quickrun-add-command "clojure"
