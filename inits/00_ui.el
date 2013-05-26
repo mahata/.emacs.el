@@ -10,17 +10,18 @@
 (add-to-list 'default-frame-alist '(cursor-color . "red"))
 (add-to-list 'default-frame-alist '(foreground-color . "green"))
 (add-to-list 'default-frame-alist '(background-color . "black"))
-(add-to-list 'default-frame-alist '(width . 800))
-;; (add-to-list 'default-frame-alist '(height . 600))
 (add-to-list 'default-frame-alist '(font . "-apple-Monaco-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1"))
+
+;; toolbar
+(tool-bar-mode -1)
 
 ;; parenthesis
 (show-paren-mode 1) ;; show corresponding parentheses
 
 ;; modeline
 (display-time-mode 1) ;; show time on mode line
-(set-face-foreground 'modeline "white") ;; set active modeline
-(set-face-background 'modeline "red")   ;; set active modeline
+(set-face-foreground 'mode-line "white") ;; set active modeline
+(set-face-background 'mode-line "red")   ;; set active modeline
 (set-face-foreground 'mode-line-inactive "white") ;; set inactive modeline
 (set-face-background 'mode-line-inactive "blue")  ;; set inactive modeline
 (line-number-mode 1) ;; show line number
