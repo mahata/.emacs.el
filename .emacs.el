@@ -4,15 +4,6 @@
         (expand-file-name "~/.emacs.d/init-loader")
         (expand-file-name "~/.emacs.d/lisp/apel")
         (expand-file-name "~/.emacs.d/lisp/emu")
-        (expand-file-name "~/.emacs.d/lisp/erlang-mode")
-        (expand-file-name "~/.emacs.d/lisp/vline")
-        (expand-file-name "~/.emacs.d/lisp/popwin")
-        (expand-file-name "~/.emacs.d/lisp/haskell-mode")
-        (expand-file-name "~/.emacs.d/lisp/scala-mode")
-        ;; (expand-file-name "~/.emacs.d/lisp/yasnippet")
-        (expand-file-name "~/.emacs.d/lisp/anything")
-        (expand-file-name "~/.emacs.d/lisp/auto-complete")
-        (expand-file-name "~/.emacs.d/lisp/auto-install")
         (expand-file-name "~/.emacs.d/lisp/ensime/elisp")
         ) load-path))
 
@@ -26,11 +17,14 @@
 
 (require 'cl)
 (require 'info)
-(require 'popwin)
 (require 'popup)
 (require 'flymake)
 (require 'ensime)
-(require 'anything-startup)
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(package-initialize)
 
 (require 'init-loader)
 (init-loader-load "~/.emacs.d/inits")
