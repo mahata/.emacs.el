@@ -1,11 +1,10 @@
-(require 'php-mode)
+(when (require 'php-mode nil t))
 
-(add-hook 'php-mode-hook
-          (defun php-mode-hook ()
-            (setq comment-start "// "
-                  comment-end ""
-                  comment-start-skip "// *")
-            (setq-default indent-tabs-mode nil)
-            (setq-default indent-level 4)
-            (setq-default tab-width 4)
-            ))
+(defun php-mode-hooks ()
+  (setq indent-tabs-mode t)
+  (setq indent-level 4)
+  (setq c-basic-offset 4)
+  (setq tab-width 4))
+
+(add-hook 'php-mode-hook 'php-mode-hooks)
+
