@@ -1,5 +1,7 @@
 (defun js-mode-hook-func ()
-  (setq-default indent-tabs-mode nil)
+  (if (eq (getenv "USER") "mahata")
+      (setq indent-tabs-mode nil)
+      (setq indent-tabs-mode t))
   (setq-default indent-level 4)
   (setq-default tab-width 4))
 
