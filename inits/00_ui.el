@@ -10,6 +10,8 @@
 (add-to-list 'default-frame-alist '(cursor-color . "red"))
 (add-to-list 'default-frame-alist '(foreground-color . "green"))
 (add-to-list 'default-frame-alist '(background-color . "black"))
+(add-to-list 'default-frame-alist '(height . 40))
+(add-to-list 'default-frame-alist '(width . 140))
 (add-to-list 'default-frame-alist '(font . "-apple-Monaco-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1"))
 
 ;; toolbar
