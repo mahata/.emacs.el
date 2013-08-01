@@ -1,6 +1,7 @@
 (require 'yasnippet)
 
-(add-to-list 'yas-snippet-dirs "~/emacs-conf/yasnippet")
+;; (add-to-list 'yas-snippet-dirs "~/emacs-conf/yasnippet")
+(setq yas-snippet-dirs '("~/emacs-conf/yasnippet"))
 
 (require 'dropdown-list)
 (setq yas/prompt-functions '(yas/dropdown-prompt
