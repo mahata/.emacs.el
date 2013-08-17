@@ -1,9 +1,7 @@
 (when (require 'php-mode nil t))
 
 (defun php-mode-hooks ()
-  (if (eq (getenv "USER") "mahata")
-      (setq indent-tabs-mode nil)
-      (setq indent-tabs-mode t))
+  (setq indent-tabs-mode nil)
   (helm-gtags-mode t)
   (setq indent-level 4)
   (setq c-basic-offset 4)
