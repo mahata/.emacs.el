@@ -9,6 +9,7 @@
   (setq js3-enter-indents-newline t)
   (setq js3-indent-on-enter-key t)
   (hs-minor-mode 1)
+  (helm-gtags-mode t)
   (when (require 'auto-complete nil t)
     (make-variable-buffer-local 'ac-sources)
     (add-to-list 'ac-sources 'ac-source-yasnippet)
