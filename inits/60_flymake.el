@@ -107,5 +107,5 @@
 (add-hook 'find-file-hook 'flymake-find-file-hook)
 
 ;; haskell
-(require 'flymake-haskell-multi)
-(add-hook 'haskell-mode-hook 'flymake-haskell-multi-load)
+;; (require 'flymake-haskell-multi)
+;; (add-hook 'haskell-mode-hook 'flymake-haskell-multi-load)
