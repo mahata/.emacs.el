@@ -4,6 +4,7 @@
 
 (defun js3-mode-hooks ()
   (setq js3-indent-level 4)
+  (setq tab-width 4)
   (setq js3-mode-dev-mode-p t)
   (setq js3-auto-indent-p t)
   (setq js3-enter-indents-newline t)
