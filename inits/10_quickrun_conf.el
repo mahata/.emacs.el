@@ -19,3 +19,10 @@
 ;;                       '((:command . "clj")))
 ;; (add-to-list 'quickrun-file-alist
 ;;              '("\\.clj$" . "clojure"))
+
+;; SML
+(quickrun-add-command "sml"
+                      '((:command . "sml")))
+(add-to-list 'quickrun-file-alist
+             '("\\.sml$" . "sml"))
+
