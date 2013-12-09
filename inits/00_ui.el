@@ -32,4 +32,5 @@
 ;; opacity
 (add-to-list 'default-frame-alist '(alpha . 85))
 
-
+;; font (Maverick has weird default font setting for Japanese)
+(set-fontset-font nil 'japanese-jisx0208 (font-spec :family "Hiragino Kaku Gothic ProN"))
