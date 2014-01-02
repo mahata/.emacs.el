@@ -3,6 +3,7 @@
 (delete '("\\.tex\\'" flymake-simple-tex-init) flymake-allowed-file-name-masks)
 (delete '("\\.java\\'" flymake-simple-make-java-init flymake-simple-java-cleanup) flymake-allowed-file-name-masks)
 (delete '("\\.l?hs\\'" haskell-flymake-init) flymake-allowed-file-name-masks)
+(delete '("\\.\\(?:c\\(?:pp\\|xx\\|\\+\\+\\)?\\|CC\\)\\'" flymake-simple-make-init) flymake-allowed-file-name-masks)
 
 (when (not (fboundp 'flymake-php-init))
   (defun flymake-php-init ()
@@ -58,20 +59,34 @@
 
 (when (not (fboundp 'flymake-ruby-init))
   (defun flymake-ruby-init ()
-  (let* ((temp-file   (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-         (local-file  (file-relative-name
-                       temp-file
-                       (file-name-directory buffer-file-name))))
-    (list "ruby" (list "-c" local-file))))
+    (let* ((temp-file   (flymake-init-create-temp-buffer-copy
+                         'flymake-create-temp-inplace))
+           (local-file  (file-relative-name
+                         temp-file
+                         (file-name-directory buffer-file-name))))
+      (list "ruby" (list "-c" local-file))))
   (setq flymake-allowed-file-name-masks
         (append
          flymake-allowed-file-name-masks
          '(("\\.rb$" flymake-ruby-init))))
   (setq flymake-err-line-patterns
         (cons
-         '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3) 
+         '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3)
          flymake-err-line-patterns)))
+
+(defun flymake-cc-init ()
+  (let* ((temp-file   (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+         (local-file  (file-relative-name
+                       temp-file
+                       (file-name-directory buffer-file-name))))
+    (setq flymake-err-line-patterns
+          (cons
+           '("^\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\):\\([0-9]+\\):\\([0-9]+\\)[ \t\n]*:[ \t\n]*\\(\\(?:error\\|warning\\|fatal error\\):\\(?:.*\\)\\)" 1 2 3 4)
+           flymake-err-line-patterns))
+    (list "clang++" (list "-fsyntax-only" "-fno-color-diagnostics" local-file))))
+(push '("\\.cpp$" flymake-cc-init) flymake-allowed-file-name-masks)
+(add-hook 'c++-mode-hook '(lambda () (flymake-mode t)))
 
 (when (not (fboundp 'flymake-tex-init))
   (defun flymake-tex-init ()
@@ -89,6 +104,8 @@
         (cons
          '("^\\(\.+\.tex\\):\\([0-9]+\\):\\([0-9]+\\):\\(.+\\)" 1 2 3 4)
          flymake-err-line-patterns)))
+
+
 
 (defun my-popup-flymake-display-error ()
   (interactive)
