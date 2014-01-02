@@ -1,5 +1,5 @@
 (define-key global-map "\C-h" 'backward-delete-char)
-(define-key global-map "\C-q" 'scroll-n-lines-behind)
+(define-key global-map (kbd "C-`") 'scroll-n-lines-behind)
 (define-key global-map "\C-z" 'scroll-n-lines-ahead)
 (define-key global-map "\C-o" 'goto-line)
 (define-key global-map "\C-c;" 'comment-region)
