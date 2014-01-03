@@ -22,4 +22,5 @@
 (define-key global-map (kbd "C-S-u") 'undo)
 (define-key global-map (kbd "M->") 'pop-tag-mark)
 
+(define-key c++-mode-map "\C-c:" 'uncomment-region)
 ;; (define-key dired-mode-map "\M-s" 'other-window-or-split)
