@@ -5,6 +5,7 @@
 (define-key global-map "\C-c;" 'comment-region)
 (define-key global-map "\C-c:" 'uncomment-region)
 (define-key global-map "\C-cr" 'replace-string)
+(define-key global-map (kbd "C-j") 'newline-and-indent)
 (define-key global-map "\M-s" 'other-window-or-split)
 (define-key global-map "\M-c" 'helm-filelist)
 (define-key global-map "\M-q" 'helm-grep)
