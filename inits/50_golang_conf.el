@@ -1,6 +1,7 @@
 ;; * Do following things beforehand to enable this elisp
 ;; *
 ;; * Install Go
+;; * Run `mkdir $HOME/go-workspace`
 ;; * Add `export GOPATH=$HOME/go-workspace` to ~/.zshrc
 ;; * Run `go get -u github.com/dougm/goflymake`
 ;; * Run `go get -u github.com/nsf/gocode`
