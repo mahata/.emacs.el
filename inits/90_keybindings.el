@@ -26,6 +26,8 @@
 (define-key global-map (kbd "C-c j") 'helm-ls-git-ls)
 (define-key global-map (kbd "C-c m") 'magit-status)
 (define-key global-map (kbd "C-c b") 'magit-blame-mode)
+(define-key global-map (kbd "C-c h") 'hs-hide-block)
+(define-key global-map (kbd "C-c s") 'hs-show-block)
 
 (define-key c++-mode-map "\C-c:" 'uncomment-region)
 ;; (define-key dired-mode-map "\M-s" 'other-window-or-split)
