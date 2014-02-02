@@ -18,7 +18,7 @@
 (when (require 'go-mode nil t))
 
 (defun go-mode-hooks ()
-  (setq indent-tabs-mode nil)
+  (setq indent-tabs-mode t)
   (helm-gtags-mode t)
   (setq indent-level 4)
   (setq c-basic-offset 4)
