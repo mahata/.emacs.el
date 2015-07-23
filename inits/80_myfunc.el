@@ -14,15 +14,3 @@
   (when (one-window-p)
     (split-window-vertically))
   (other-window 1))
-
-;; frame opacity
-(defun increase-opacity (&optional n)
-  "Increase opacity of the frame."
-  (interactive "p")
-  (modify-all-frames-parameters
-   (list (cons 'alpha (+ (cdr (assoc 'alpha default-frame-alist)) n)))))
-(defun decrease-opacity (&optional n)
-  "Decrease opacity of the frame."
-  (interactive "p")
-  (modify-all-frames-parameters
-   (list (cons 'alpha (- (cdr (assoc 'alpha default-frame-alist)) n)))))
