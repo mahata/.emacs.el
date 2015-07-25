@@ -1,7 +1,7 @@
 ;; ELPA and MELPA
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (package-initialize)
 
 ;; Auto Complete
@@ -34,7 +34,6 @@
 (setq-default save-place t)
 
 ;; UI
-(global-hl-line-mode 1) ;; cursor line
 (blink-cursor-mode 1) ;; let cursor blink
 (show-paren-mode 1) ;; show corresponding parentheses
 (display-time-mode 1) ;; show time on mode line
