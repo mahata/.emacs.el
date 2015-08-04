@@ -45,6 +45,7 @@
 (column-number-mode t) ;; show column number
 (which-func-mode 1) ;; show function name on mode-line
 (setq which-func-modes t) ;; show function name on mode-line
+(if window-system (tool-bar-mode 0)) ;; hide toolbar (when it's not terminal)
 
 ;; Atom UI
 (unless (package-installed-p 'atom-dark-theme)
