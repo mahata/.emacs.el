@@ -46,6 +46,11 @@
 (which-func-mode 1) ;; show function name on mode-line
 (setq which-func-modes t) ;; show function name on mode-line
 
+;; Atom UI
+(unless (package-installed-p 'atom-dark-theme)
+  (package-refresh-contents) (package-install 'atom-dark-theme))
+(load-theme 'atom-dark t)
+
 ;; Buffer scroll
 (defun scroll-n-lines-ahead (&optional n)
   "Scroll ahead N lines (1 by default)."
