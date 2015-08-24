@@ -49,6 +49,7 @@
     (progn
       (tool-bar-mode 0) ;; hide toolbar
       (set-frame-parameter nil 'alpha 80) ;; add transparency
+      (define-key global-map "\M-s" 'other-window) ;; Move to the other window
     ))
 
 ;; Atom UI
